@@ -83,6 +83,7 @@ elif user_input == 'c':
 elif user_input == 'u':
     file_name = input("Please input the file name containing the arithmetic operations: ")
     # print(file_name) 
+    delimiter = r"(\+)|(\-)|(\*)|(\/)"
     try:
         with open(f"{file_name}.txt", "r") as file:
             line = file.read()
@@ -91,32 +92,36 @@ elif user_input == 'u':
         new_list = re.split(',|\n|#',new_list )
         # print(new_list)
         new_list = [el for el in new_list if el != ""]
-        print(new_list)
+        # print(new_list)
         for el in new_list:
             el = el.strip()
             el = el.replace(" ","")
             print(f"Question: {el}")
-
+            val = re.split(delimiter, el)
+            val = [x for x in val if x is not None]
+            # print(val)
             # print(f"checker{el}checker")
             
-            if len(el) == 3:
-                x = checker(el[0])
-                op = opchecker(el[1])
-                y = checker(el[2])
+            if len(val) == 3:
+                x = checker(val[0])
+                op = opchecker(val[1])
+                y = checker(val[2])
                 answer = calculate(x,y,op)
-                print(f"The answer is {answer}")
-            elif len(el)>3:
-                answer = el[0]
-                for i in range(0,len(el)-1,2):
+                answer = float(answer)
+                print(f"The answer is {answer:.2f}")
+            elif len(val)>3:
+                answer = val[0]
+                for i in range(0,len(val)-1,2):
                     x = checker(answer)
-                    op = el[i+1]
-                    y = checker(el[i+2])
+                    op = val[i+1]
+                    y = checker(val[i+2])
                     answer = calculate(x,y,op)
                     answer = str(answer)
-                    
-                print(f"The answer is {answer}")
+                answer = float(answer)    
+                print(f"The answer is {answer:.2f}")
             else:
-                print(f"The answer is {el}")
+                val = float(val)
+                print(f"The answer is {val:.2f}")
 
     except FileNotFoundError as er:
         print(er)
